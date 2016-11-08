@@ -1,0 +1,35 @@
+/*.header-panel {
+    background-color: #009587;
+    height: 144px;
+    position: relative;
+    z-index: 3;
+}*/
+
+/* TEMPLATE STYLES */
+/* Necessary for full page carousel*/
+
+html,
+body {
+    height: 100%;
+}
+
+@media (max-width: 480px) {
+    .footer-resize {
+        font-size: smaller;
+    }
+}
+
+
+.cell-success{
+    border:1px solid rgba(34, 34, 34, 0.98);
+    border-radius: 100%;
+}
+
+.cell-header{
+    border: 1px solid rgba(86,61,124,.2);
+    background-color: rgba(86,61,124,.15);
+}
+
+
+
+

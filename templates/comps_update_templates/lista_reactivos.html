@@ -1,0 +1,133 @@
+{% extends "comps_update_templates/base.html" %}
+{% load staticfiles %}
+
+{% block title %}Actualizar reactivos{% endblock %}
+{% block nav_lista_act %}active{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="col-md-12">
+                <div class="row cell-header">
+                    <div class="col-md-1"><b>Completado</b></div>
+                    <div class="col-md-2"><b>Nombre del frasco</b></div>
+                    <div class="col-md-2"><b>CAS </b>
+                        <small>(Importante!!!)</small>
+                    </div>
+                    <div class="col-md-2 cell-header"><b>CE</b></div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="panel-group" id="accordion">
+                    {% if lista_reactivos %}
+                        <!--panel-->
+                        {% for reactivo in lista_reactivos %}
+                            <div class="panel panel-default">
+                                <!--Panel heading-->
+                                <div class="panel-heading ">
+                                    <h6 class="panel-title">
+                                        <div class="row">
+                                            <div class="col-md-1"><img width="36" height="36" src="{% static "images/icons/completo.svg" %}">
+                                            </div>
+                                            <div class="col-md-2 offset-md-1 text-xs-center">
+                                                {{ reactivo.nombre_frasco|lower|capfirst }}</div>
+                                            <div class="col-md-2 text-xs-center">
+                                                {% if reactivo.n_cas %}{{ reactivo.n_cas }}{% else %}
+                                                    <i class="flaticon-close-button"></i> {% endif %}</div>
+                                            <div class="col-md-2 text-xs-center">
+                                                {% if reactivo.n_ce %}{{ reactivo.n_ce }}{% else %}
+                                                    <span class="flaticon-close-button"></span> {% endif %}</div>
+                                            <div class="col-md-2 text-xs-center">
+                                                <a data-toggle="collapse" data-parent="#accordion"
+                                                   href="#collapse_{{ reactivo.id }}">
+                                                    Ver existencias
+                                                    {# <i class="cbqicon-angle-right rotate-icon"></i>#}
+                                                </a>
+                                            </div>
+                                            <div class="col-md-3 text-xs-center">
+                                                <div class="btn-group ">
+                                                    <button type="button" class="btn btn-default"><i
+                                                            class="glyphicon glyphicon-edit"></i> Editar
+                                                    </button>
+                                                    <button type="button"
+                                                            class="btn btn-danger waves-effect waves-light"><i
+                                                            class="glyphicon glyphicon-trash"></i> Eliminar
+                                                    </button>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </h6>
+                                </div>
+
+                                <!--Panel body-->
+                                <div id="collapse_{{ reactivo.id }}" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        Anim pariatur cliche reprehenderit,
+                                        enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon
+                                        officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa
+                                        nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a
+                                        bird
+                                        on it squid single-origin coffee
+                                        nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer
+                                        labore wes anderson cred nesciunt sapiente ea proident. Ad vegan
+                                        excepteur butcher vice lomo. Leggings occaecat
+                                        craft beer farm-to-table, raw denim
+                                        aesthetic synth nesciunt you probably haven't heard of them accusamus
+                                        labore sustainable VHS.
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        <!--/.panel-->
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-md-offset-4">
+            {% if page_obj.has_other_pages %}
+                <ul class="pagination">
+                    {% if page_obj.has_previous %}
+                        <li><a href="?page={{ page_obj.previous_page_number }}"><i
+                                class="glyphicon glyphicon-chevron-left"></i></a></li>
+                    {% else %}
+                        <li class="disabled"><span class="glyphicon glyphicon-chevron-left"></span></li>
+                    {% endif %}
+                    {% if not page_obj.number == 1 %}
+                        <li><a href="?page={{ 1 }}">{{ 1 }}</a></li>
+                        {% if not page_obj.number == 2 %}
+                            <li class="disabled"><span>...</span></li>
+                        {% endif %}
+                    {% endif %}
+
+                    {% for i in page_obj.paginator.page_range %}
+                        {% if i <= page_obj.number|add:"5" and i >= page_obj.number %}
+                            {% if page_obj.number == i %}
+                                <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                            {% else %}
+                                <li><a href="?page={{ i }}">{{ i }}</a></li>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                    {% if not page_obj.number == page_obj.paginator.page_range|length and page_obj.number < page_obj.paginator.page_range|length|add:"-5" %}
+                        {% if not page_obj.number == page_obj.paginator.page_range|length|add:"-1" %}
+                            <li class="disabled"><span>...</span></li>
+                            <li>
+                                <a href="?page={{ page_obj.paginator.page_range|length }}">{{ page_obj.paginator.page_range|length }}</a>
+                            </li>
+
+                        {% endif %}
+                    {% endif %}
+                    {% if page_obj.has_next %}
+                        <li><a href="?page={{ page_obj.next_page_number }}"><i
+                                class="glyphicon glyphicon-chevron-right"></i></a></li>
+                    {% else %}
+                        <li class="disabled"><span class="glyphicon glyphicon-chevron-right"></span></li>
+                    {% endif %}
+                </ul>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

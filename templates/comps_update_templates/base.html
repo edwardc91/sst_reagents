@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta name="charcter" charset="ANSI">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no">
+
+    <title>{% block title %}{% endblock %}</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static "icons_fonts/fonts/personal_roboto.css" %}">
+    <link rel="stylesheet" href="{% static "icons_fonts/icons/flaticons/flaticon.css" %}">
+    <link rel="stylesheet" href="{% static "icons_fonts/icons/cbq-icons/styles.css" %}">
+    <link rel="stylesheet" href="{% static "icons_fonts/fonts/material-design-iconic-font.min.css" %}">
+
+    <link rel="stylesheet" href="{% static "bootstrap3.3.7/css/bootstrap.min.css" %}">
+
+    {% comment %}<link rel="stylesheet" href="{% static "mdb/mdb.css" %}">{% endcomment %}
+
+    <link rel="stylesheet" href="{% static "bootstrap_slate/bootstrap.min.css" %}">
+
+    <link rel="stylesheet" href="{% static "custom_css/custom.css" %}">
+
+    <script src="{% static "mdb/jquery-2.js" %}"></script>
+    <script src="{% static "bootstrap3.3.7/js/bootstrap.min.js" %}"></script>
+    <script src="{% static "bootstrap3.3.7/js/npm.js" %}"></script>
+
+    {% comment %}<link rel="icon" type="image/png" href="{% static "images/icons/icon.png" %}"/>{% endcomment %}
+
+</head>
+<body>
+
+<!--Navbar-->
+
+<div class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <a href="" class="navbar-brand">Reactivos CBQ</a>
+        </div>
+        <div class="navbar-collapse collapse" id="navbar-main">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="{% url "lista_reactivos" %}"><i class="glyphicon glyphicon-list"></i> Lista reactivos</a>
+                </li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="themes" aria-expanded="false"><i
+                            class="glyphicon glyphicon-sort-by-attributes-alt"></i> Por locales <span
+                            class="caret"></span></a>
+                    <ul class="dropdown-menu" aria-labelledby="themes">
+                        <li><a href="">Todos</a></li>
+                        {% if lista_locales %}
+                            <li class="divider"></li>
+                            {% for local in lista_locales %}
+                                <li><a href="">{{ local.nombre }}</a></li>
+                            {% endfor %}
+                        {% endif %}
+                    </ul>
+                </li>
+                <li>
+                    <a href="{% url "add_reactivo" %}"><i class="glyphicon glyphicon-plus-sign"></i> Agregar
+                        reactivo</a>
+                </li>
+
+            </ul>
+            <form class="navbar-search pull-left" accept-charset="utf-8">
+                <input type="text" class="search-query" placeholder="Search">
+            </form>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="" target=""><i class="glyphicon glyphicon-log-out"></i> Cerrar sesion</a></li>
+
+            </ul>
+
+        </div>
+    </div>
+</div>
+</div>
+
+<!--/.Navbar-->
+
+<!-- main columns -->
+
+<main class="p-t-6" style="padding-top: 5%">
+    <div class="container-fluid text-xs-center">
+        {% block content %}{% endblock %}
+    </div>
+</main>
+
+{% comment %}<script src="{% static "mdb/mdb.js" %}"></script>
+<script src="{% static "mdb/tether.js" %}"></script>{% endcomment %}
+
+{% comment %}<script type="text/javascript">
+    new WOW().init();
+</script>{% endcomment %}
+</body>
+</html>
