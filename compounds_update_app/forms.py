@@ -39,7 +39,7 @@ def get_propiedade_choices():
 
 
 class PropiedadForm(forms.Form):
-    propiedad = forms.Select(choices=get_propiedade_choices())
+    propiedad = forms.ChoiceField(choices=get_propiedade_choices(), widget=widgets.CheckboxSelectMultiple)
 
 
 class ExistenciaForm(forms.ModelForm):

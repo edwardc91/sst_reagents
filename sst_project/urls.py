@@ -21,6 +21,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^nested_admin/', include('nested_admin.urls')),
     url(r'^lista_reactivos/', views.ListaReactivosView.as_view(), name="lista_reactivos"),
-    url(r'^reactivo/add', views.CreateReactivoView.as_view(), name="add_reactivo"),
+    url(r'^reactivo/add', views.create_reactivo_view, name="add_reactivo"),
     url(r'reactivo/(?P<pk>[0-9]+)/$', views.UpdateReactivoView.as_view(), name='update_reactivo'),
 ]

@@ -5,12 +5,12 @@
 
         <form method="post">
             {% csrf_token %}
-            <div class="col-md-5">
-                {{ form.as_table }}
-            </div>
+            <table class="table">
+                {{ form_reactivo.as_table }}
+            </table>
+            {{ form_propiedades }}
+            <button class="btn btn-primary">Agregar</button>
 
-    <button class="btn btn-primary">Agregar</button>
-    </form>
-
+        </form>
     </div>
 {% endblock %}

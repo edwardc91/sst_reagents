@@ -8,76 +8,79 @@
     <div class="row">
         <div class="col-md-12">
             <div class="col-md-12">
-                <div class="row cell-header">
+                <div class="row cell-header text-center">
                     <div class="col-md-1"><b>Completado</b></div>
-                    <div class="col-md-2"><b>Nombre del frasco</b></div>
+                    <div class="col-md-2 text-left"><b>Nombre del frasco</b></div>
                     <div class="col-md-2"><b>CAS </b>
-                        <small>(Importante!!!)</small>
                     </div>
-                    <div class="col-md-2 cell-header"><b>CE</b></div>
+                    <div class="col-md-2"><b>CE</b></div>
                 </div>
             </div>
-            <div class="col-md-12">
+            <div class="col-md-12 text-center">
                 <div class="panel-group" id="accordion">
                     {% if lista_reactivos %}
                         <!--panel-->
                         {% for reactivo in lista_reactivos %}
-                            <div class="panel panel-default">
-                                <!--Panel heading-->
-                                <div class="panel-heading ">
-                                    <h6 class="panel-title">
-                                        <div class="row">
-                                            <div class="col-md-1"><img width="36" height="36" src="{% static "images/icons/completo.svg" %}">
-                                            </div>
-                                            <div class="col-md-2 offset-md-1 text-xs-center">
-                                                {{ reactivo.nombre_frasco|lower|capfirst }}</div>
-                                            <div class="col-md-2 text-xs-center">
-                                                {% if reactivo.n_cas %}{{ reactivo.n_cas }}{% else %}
-                                                    <i class="flaticon-close-button"></i> {% endif %}</div>
-                                            <div class="col-md-2 text-xs-center">
-                                                {% if reactivo.n_ce %}{{ reactivo.n_ce }}{% else %}
-                                                    <span class="flaticon-close-button"></span> {% endif %}</div>
-                                            <div class="col-md-2 text-xs-center">
-                                                <a data-toggle="collapse" data-parent="#accordion"
-                                                   href="#collapse_{{ reactivo.id }}">
-                                                    Ver existencias
-                                                    {# <i class="cbqicon-angle-right rotate-icon"></i>#}
-                                                </a>
-                                            </div>
-                                            <div class="col-md-3 text-xs-center">
-                                                <div class="btn-group ">
-                                                    <button type="button" class="btn btn-default"><i
-                                                            class="glyphicon glyphicon-edit"></i> Editar
-                                                    </button>
-                                                    <button type="button"
-                                                            class="btn btn-danger waves-effect waves-light"><i
-                                                            class="glyphicon glyphicon-trash"></i> Eliminar
-                                                    </button>
+                                <div class="panel panel-default">
+                                    <!--Panel heading-->
+                                    <div class="panel-heading">
+                                        <h6 class="panel-title">
+                                            <div class="row">
+                                                <div class="col-md-1"><img width="36" height="36"
+                                                                           src="{% static "images/icons/completo.png" %}">
                                                 </div>
+                                                <div class="col-md-2 offset-md-1 text-left">
+                                                    {{ reactivo.nombre_frasco|lower|capfirst }}</div>
+                                                <div class="col-md-2 text-xs-center">
+                                                    {% if reactivo.n_cas %}{{ reactivo.n_cas }}{% else %}
+                                                         <img width="25" height="25"
+                                                             src="{% static "images/icons/empty.png" %}"> {% endif %}</div>
+                                                <div class="col-md-2 text-xs-center">
+                                                    {% if reactivo.n_ce %}{{ reactivo.n_ce }}{% else %}
+                                                        <img width="25" height="25"
+                                                             src="{% static "images/icons/empty.png" %}">
+                                                         {% endif %}</div>
+                                                <div class="col-md-2 text-xs-center">
+                                                    <a class="btn btn-default" data-toggle="collapse" data-parent="#accordion"
+                                                       href="#collapse_{{ reactivo.id }}">
+                                                        Ver existencias
+                                                        {# <i class="cbqicon-angle-right rotate-icon"></i>#}
+                                                    </a>
+                                                </div>
+                                                <div class="col-md-3 text-xs-center">
+                                                    <div class="btn-group ">
+                                                        <button type="button" class="btn btn-default"><i
+                                                                class="glyphicon glyphicon-edit"></i> Editar
+                                                        </button>
+                                                        <button type="button"
+                                                                class="btn btn-danger waves-effect waves-light"><i
+                                                                class="glyphicon glyphicon-trash"></i> Eliminar
+                                                        </button>
+                                                    </div>
 
+                                                </div>
                                             </div>
-                                        </div>
-                                    </h6>
-                                </div>
+                                        </h6>
+                                    </div>
 
-                                <!--Panel body-->
-                                <div id="collapse_{{ reactivo.id }}" class="panel-collapse collapse">
-                                    <div class="panel-body">
-                                        Anim pariatur cliche reprehenderit,
-                                        enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon
-                                        officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa
-                                        nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a
-                                        bird
-                                        on it squid single-origin coffee
-                                        nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer
-                                        labore wes anderson cred nesciunt sapiente ea proident. Ad vegan
-                                        excepteur butcher vice lomo. Leggings occaecat
-                                        craft beer farm-to-table, raw denim
-                                        aesthetic synth nesciunt you probably haven't heard of them accusamus
-                                        labore sustainable VHS.
+                                    <!--Panel body-->
+                                    <div id="collapse_{{ reactivo.id }}" class="panel-collapse collapse">
+                                        <div class="panel-body">
+                                            Anim pariatur cliche reprehenderit,
+                                            enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon
+                                            officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa
+                                            nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a
+                                            bird
+                                            on it squid single-origin coffee
+                                            nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer
+                                            labore wes anderson cred nesciunt sapiente ea proident. Ad vegan
+                                            excepteur butcher vice lomo. Leggings occaecat
+                                            craft beer farm-to-table, raw denim
+                                            aesthetic synth nesciunt you probably haven't heard of them accusamus
+                                            labore sustainable VHS.
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
                         {% endfor %}
                         <!--/.panel-->
                     {% endif %}

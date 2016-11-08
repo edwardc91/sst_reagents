@@ -5,7 +5,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db import DatabaseError
 
-from reactivos_sst_app.models import Local, EstadoReactivo, EstadoProducto, EstadoEnvase, TipoEnvase, MaterialEnvase
+from reactivos_sst_app.models import Local, EstadoReactivo, EstadoProducto, EstadoEnvase, TipoEnvase, MaterialEnvase, \
+    Propiedad
 
 from django.urls import reverse
 
@@ -43,6 +44,19 @@ def get_estados_usos():
 
         for objeto in objetos:
             choices.append((objeto.estado, objeto.estado,))
+
+        return choices
+    except DatabaseError:
+        return []
+
+
+def get_propiedade_choices():
+    try:
+        propiedades = Propiedad.objects.all()
+        choices = []
+
+        for propiedad in propiedades:
+            choices.append((propiedad.propiedad, propiedad.propiedad,))
 
         return choices
     except DatabaseError:
@@ -94,9 +108,9 @@ class Reactivo(models.Model):
         return "reac. " + reactivo_id + self.local
 
 
-class Propiedad(models.Model):
-    reactivo = models.ForeignKey(Reactivo,on_delete=models.CASCADE)
-    propiedad = models.CharField(max_length=200)
+class PropiedadUp(models.Model):
+    reactivo = models.ForeignKey(Reactivo, on_delete=models.CASCADE)
+    propiedad = models.CharField(max_length=200, choices=get_propiedade_choices())
 
     def __unicode__(self):
         return self.propiedad
