@@ -16,11 +16,15 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from compounds_update_app import views
+from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^nested_admin/', include('nested_admin.urls')),
-    url(r'^lista_reactivos/', views.ListaReactivosView.as_view(), name="lista_reactivos"),
-    url(r'^reactivo/add', views.create_reactivo_view, name="add_reactivo"),
-    url(r'reactivo/(?P<pk>[0-9]+)/$', views.UpdateReactivoView.as_view(), name='update_reactivo'),
+    url(r'^listado_reactivos/(?P<id>[0-9]+)/', login_required(views.ListaReactivosView.as_view()),
+        name="listado_reactivos"),
+    url(r'^reactivo/add/', views.create_reactivo_view, name="add_reactivo"),
+    url(r'^login/', views.LoginView.as_view(), name="login"),
+    url(r'^logout/', views.logout_view, name="logout"),
+    url(r'reactivo/(?P<pk>[0-9]+)/', views.UpdateReactivoView.as_view(), name='update_reactivo'),
 ]

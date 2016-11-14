@@ -1,19 +1,74 @@
 {% extends "comps_update_templates/base.html" %}
 {% load staticfiles %}
+{% load extra_filters %}
 
 {% block title %}Actualizar reactivos{% endblock %}
 {% block nav_lista_act %}active{% endblock %}
 
 {% block content %}
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+                <div class="alert alert-success alert-dismissible fade in" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                            aria-hidden="true"><i class="glyphicon glyphicon-remove"></i></span></button>
+                    <span style="color: black"><i class="glyphicon glyphicon-ok"></i> {{ message|safe }}</span>
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    <!-- Modal elimar reactivos-->
+    <div class="modal fade" id="delReactivoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true"><i class="glyphicon glyphicon-remove"></i></span></button>
+                    <h3 class="modal-title" id="myModalLabel">Eliminar reactivo<span id="header_modal_init"></span></h3>
+                </div>
+                <div class="modal-body">
+                    <p>¿Realmente deseas eliminar el reactivo<span id="pregunta_modal"></span> <span
+                            id="modal_name_reactivo"
+                            style="color: rgba(87, 255, 82, 0.81)"></span>?
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <form method="post" id="form_del_reactivo">
+                        {% csrf_token %}
+                        <input type="hidden" id="modal_reactivo_nombre" name="nombre_reactivo">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-trash"></span>
+                            Eliminar
+                        </button>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-md-12">
+            <h2 class="h2 text-center">Listado de reactivos en <span
+                    style="color: rgba(87, 255, 82, 0.81)">{{ nombre_local }}</span></h2>
+            <hr>
             <div class="col-md-12">
                 <div class="row cell-header text-center">
                     <div class="col-md-1"><b>Completado</b></div>
                     <div class="col-md-2 text-left"><b>Nombre del frasco</b></div>
                     <div class="col-md-2"><b>CAS </b>
                     </div>
-                    <div class="col-md-2"><b>CE</b></div>
+                    {% if not user.is_staff %}
+                        <div class="col-md-2"><b>CE</b></div>
+                    {% else %}
+                        {% ifequal local_id 0 %}
+                            <div class="col-md-2"><b>Local</b></div>
+                        {% else %}
+                            <div class="col-md-2"><b>CE</b></div>
+                        {% endifequal %}
+                    {% endif %}
                 </div>
             </div>
             <div class="col-md-12 text-center">
@@ -21,68 +76,126 @@
                     {% if lista_reactivos %}
                         <!--panel-->
                         {% for reactivo in lista_reactivos %}
-                                <div class="panel panel-default">
-                                    <!--Panel heading-->
-                                    <div class="panel-heading">
-                                        <h6 class="panel-title">
-                                            <div class="row">
-                                                <div class="col-md-1"><img width="36" height="36"
-                                                                           src="{% static "images/icons/completo.png" %}">
-                                                </div>
-                                                <div class="col-md-2 offset-md-1 text-left">
-                                                    {{ reactivo.nombre_frasco|lower|capfirst }}</div>
-                                                <div class="col-md-2 text-xs-center">
-                                                    {% if reactivo.n_cas %}{{ reactivo.n_cas }}{% else %}
-                                                         <img width="25" height="25"
-                                                             src="{% static "images/icons/empty.png" %}"> {% endif %}</div>
-                                                <div class="col-md-2 text-xs-center">
+                            <div id="panel_{{ reactivo.id }}" class="panel panel-default">
+                                <!--Panel heading-->
+                                <div class="panel-heading">
+                                    <h6 class="panel-title">
+                                        <div class="row">
+                                            <div class="col-md-1"><img width="36" height="36"
+                                                                       src="{% static "images/icons/completo.png" %}">
+                                            </div>
+                                            <div class="col-md-2 offset-md-1 text-left">
+                                                {{ reactivo.nombre_frasco|lower|capfirst }}</div>
+                                            <div class="col-md-2 text-xs-center">
+                                                {% if reactivo.n_cas and not reactivo.n_cas|is_equal_with:"0-0-0" %}{{ reactivo.n_cas }}{% else %}
+                                                    <img width="25" height="25"
+                                                         src="{% static "images/icons/empty.png" %}"> {% endif %}</div>
+                                            <div class="col-md-2 text-xs-center">
+                                                {% if not user.is_staff %}
                                                     {% if reactivo.n_ce %}{{ reactivo.n_ce }}{% else %}
                                                         <img width="25" height="25"
                                                              src="{% static "images/icons/empty.png" %}">
-                                                         {% endif %}</div>
-                                                <div class="col-md-2 text-xs-center">
-                                                    <a class="btn btn-default" data-toggle="collapse" data-parent="#accordion"
-                                                       href="#collapse_{{ reactivo.id }}">
-                                                        Ver existencias
-                                                        {# <i class="cbqicon-angle-right rotate-icon"></i>#}
-                                                    </a>
+                                                    {% endif %}
+                                                {% else %}
+                                                    {% ifequal local_id 0 %}
+                                                        {{ reactivo.local }}
+                                                    {% else %}
+                                                        {% if reactivo.n_ce %}{{ reactivo.n_ce }}{% else %}
+                                                            <img width="25" height="25"
+                                                                 src="{% static "images/icons/empty.png" %}">
+                                                        {% endif %}
+                                                    {% endifequal %}
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-md-2 text-xs-center">
+                                                <a class="btn btn-default" data-toggle="collapse"
+                                                   data-parent="#accordion"
+                                                   href="#collapse_{{ reactivo.id }}">
+                                                    Ver mas
+                                                    {# <i class="cbqicon-angle-right rotate-icon"></i>#}
+                                                </a>
+                                            </div>
+                                            <div class="col-md-3 text-xs-center">
+                                                <div class="btn-group ">
+                                                    <button type="button" class="btn btn-default"><i
+                                                            class="glyphicon glyphicon-edit"></i> Editar
+                                                    </button>
+                                                    <button type="button" data-toggle="modal" id="{{ reactivo.id }}"
+                                                            data-id="{{ reactivo.id }}"
+                                                            data-name="{{ reactivo.nombre_frasco|lower|capfirst }}"
+                                                            class="btn btn-danger deleteReactivo"
+                                                            data-target="#delReactivoModal"><i
+                                                            class="glyphicon glyphicon-trash"></i> Eliminar
+                                                    </button>
                                                 </div>
-                                                <div class="col-md-3 text-xs-center">
-                                                    <div class="btn-group ">
-                                                        <button type="button" class="btn btn-default"><i
-                                                                class="glyphicon glyphicon-edit"></i> Editar
-                                                        </button>
-                                                        <button type="button"
-                                                                class="btn btn-danger waves-effect waves-light"><i
-                                                                class="glyphicon glyphicon-trash"></i> Eliminar
-                                                        </button>
-                                                    </div>
 
+                                            </div>
+                                        </div>
+                                    </h6>
+                                </div>
+
+                                <!--Panel body-->
+                                <div id="collapse_{{ reactivo.id }}" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <form name="datos_reactivos_{{ reactivo.id }}" method="post">
+                                            {% csrf_token %}
+                                            <div class="container text-center">
+                                                <div class="col-xs-12">
+                                                    <h2 class="h2 text-center">Informacion general</h2>
+                                                    {% for field in formset_reactivos|get_i_item:forloop.counter0 %}
+                                                        {% if not forloop.last %}
+                                                            {% if forloop.counter|divisibleby:"2" %}
+                                                                <div class="col-md-4">
+                                                                    <div class="fieldWrapper">
+                                                                        {{ field.errors }}
+                                                                        <h4 id="id_nombre_frasco"><span
+                                                                                class="label {% if not field.value %}label-danger{% endif %}">{{ field.label_tag }}</span>
+                                                                        </h4>
+                                                                        {{ field }}
+                                                                        {% if field.help_text %}
+                                                                            <p class="help">{{ field.help_text|safe }}</p>
+                                                                        {% endif %}
+                                                                    </div>
+                                                                </div>
+                                                            {% else %}
+                                                                <div class="col-md-4 col-md-offset-2">
+                                                                    <div class="fieldWrapper">
+                                                                        {{ field.errors }}
+                                                                        <h4 id="id_nombre_frasco"><span
+                                                                                class="label {% if not field.value %}label-danger{% endif %}">{{ field.label_tag }}</span>
+                                                                        </h4>
+                                                                        {{ field }}
+                                                                        {% comment %}{% if field.help_text %}
+                                                                            <p class="help">{{ field.help_text|safe }}</p>
+                                                                        {% endif %}{% endcomment %}
+                                                                    </div>
+                                                                </div>
+                                                            {% endif %}
+                                                        {% else %}
+                                                            <div class="row text-left">
+                                                                <div class="col-md-6 col-md-offset-3">
+                                                                    <h2 class="h2 text-center">Propiedades</h2>
+                                                                    {{ field }}
+                                                                </div>
+                                                            </div>
+                                                        {% endif %}
+                                                    {% endfor %}
+
+                                                    <button class="btn btn-default"><i
+                                                            class="glyphicon glyphicon-save"></i>
+                                                        Guardar
+                                                    </button>
                                                 </div>
                                             </div>
-                                        </h6>
-                                    </div>
-
-                                    <!--Panel body-->
-                                    <div id="collapse_{{ reactivo.id }}" class="panel-collapse collapse">
-                                        <div class="panel-body">
-                                            Anim pariatur cliche reprehenderit,
-                                            enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon
-                                            officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa
-                                            nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a
-                                            bird
-                                            on it squid single-origin coffee
-                                            nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer
-                                            labore wes anderson cred nesciunt sapiente ea proident. Ad vegan
-                                            excepteur butcher vice lomo. Leggings occaecat
-                                            craft beer farm-to-table, raw denim
-                                            aesthetic synth nesciunt you probably haven't heard of them accusamus
-                                            labore sustainable VHS.
-                                        </div>
+                                        </form>
                                     </div>
                                 </div>
+                            </div>
                         {% endfor %}
                         <!--/.panel-->
+                    {% else %}
+                        <h4>No existen resultados para la consulta <span
+                                style="color: rgba(87, 255, 82, 0.81)">"{{ termino_busqueda }}"</span></h4>
                     {% endif %}
                 </div>
             </div>
@@ -93,13 +206,13 @@
             {% if page_obj.has_other_pages %}
                 <ul class="pagination">
                     {% if page_obj.has_previous %}
-                        <li><a href="?page={{ page_obj.previous_page_number }}"><i
+                        <li><a href="?termino_busqueda={{ termino_busqueda }}&page={{ page_obj.previous_page_number }}"><i
                                 class="glyphicon glyphicon-chevron-left"></i></a></li>
                     {% else %}
                         <li class="disabled"><span class="glyphicon glyphicon-chevron-left"></span></li>
                     {% endif %}
                     {% if not page_obj.number == 1 %}
-                        <li><a href="?page={{ 1 }}">{{ 1 }}</a></li>
+                        <li><a href="?termino_busqueda={{ termino_busqueda }}&page={{ 1 }}">{{ 1 }}</a></li>
                         {% if not page_obj.number == 2 %}
                             <li class="disabled"><span>...</span></li>
                         {% endif %}
@@ -110,7 +223,7 @@
                             {% if page_obj.number == i %}
                                 <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
                             {% else %}
-                                <li><a href="?page={{ i }}">{{ i }}</a></li>
+                                <li><a href="?termino_busqueda={{ termino_busqueda }}&page={{ i }}">{{ i }}</a></li>
                             {% endif %}
                         {% endif %}
                     {% endfor %}
@@ -118,13 +231,13 @@
                         {% if not page_obj.number == page_obj.paginator.page_range|length|add:"-1" %}
                             <li class="disabled"><span>...</span></li>
                             <li>
-                                <a href="?page={{ page_obj.paginator.page_range|length }}">{{ page_obj.paginator.page_range|length }}</a>
+                                <a href="?termino_busqueda={{ termino_busqueda }}&page={{ page_obj.paginator.page_range|length }}">{{ page_obj.paginator.page_range|length }}</a>
                             </li>
 
                         {% endif %}
                     {% endif %}
                     {% if page_obj.has_next %}
-                        <li><a href="?page={{ page_obj.next_page_number }}"><i
+                        <li><a href="?termino_busqueda={{ termino_busqueda }}&page={{ page_obj.next_page_number }}"><i
                                 class="glyphicon glyphicon-chevron-right"></i></a></li>
                     {% else %}
                         <li class="disabled"><span class="glyphicon glyphicon-chevron-right"></span></li>

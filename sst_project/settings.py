@@ -34,6 +34,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'django.contrib.admin',
+    'nested_admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -41,7 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'sst_project.apps.ReactivosSstAppConfig',
     'sst_project.apps.CompoundsUpdateAppConfig',
-    'nested_admin',
 ]
 
 MIDDLEWARE = [
@@ -141,4 +141,6 @@ STATICFILES_FINDERS = (
 
 #media settings
 MEDIA_ROOT = os.path.join(BASE_DIR, 'statics/media/')
+
+LOGIN_URL = 'login'
 

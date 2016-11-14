@@ -67,7 +67,7 @@ def get_propiedade_choices():
 class UserInfo(models.Model):
     choices = get_local_choices()
 
-    user_auth = models.OneToOneField(User)
+    user_auth = models.OneToOneField(User, related_name='user_info')
     local = models.CharField(max_length=200, choices=choices)
 
     def __str__(self):
@@ -79,11 +79,12 @@ class UserInfo(models.Model):
 
 
 class Reactivo(models.Model):
+    nombre_frasco = models.CharField(max_length=200, verbose_name="Nombre del frasco", null=True,
+                                     blank=True)
     nombre = models.CharField(max_length=200, blank=True, null=True)
-    nombre_frasco = models.CharField(max_length=200, verbose_name="Nombre del frasco", blank=True, null=True)
     r_reglas = models.CharField(max_length=150, blank=True, null=True)
     s_reglas = models.CharField(max_length=150, blank=True, null=True)
-    n_cas = models.CharField(max_length=150, blank=True, null=True)
+    n_cas = models.CharField(max_length=150, blank=True, null=True, help_text="Ej: 234-4-56")
     n_nu = models.CharField(max_length=150, blank=True, null=True)
     n_icsc = models.CharField(max_length=150, blank=True, null=True)
     n_rtecs = models.CharField(max_length=150, blank=True, null=True)
@@ -93,6 +94,9 @@ class Reactivo(models.Model):
                                          null=True)
     observaciones = models.TextField(blank=True, null=True)
     local = models.CharField(max_length=200, blank=True, null=True)
+
+    class Meta:
+        unique_together = ('nombre_frasco', 'local')
 
     def get_absolute_url(self):
         return reverse('reactivo-detail', kwargs={'pk': self.pk})
