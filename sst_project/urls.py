@@ -20,6 +20,7 @@ from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^$', views.RedirectToLoginView.as_view() ,name="login_redirect"),
     url(r'^nested_admin/', include('nested_admin.urls')),
     url(r'^listado_reactivos/(?P<id>[0-9]+)/', login_required(views.ListaReactivosView.as_view()),
         name="listado_reactivos"),

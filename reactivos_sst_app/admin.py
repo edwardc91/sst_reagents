@@ -169,7 +169,7 @@ class ReactivosAdmin(nested.NestedModelAdmin):
         #     if queryset.exists():
         #         queryset |= queryset.filter(pk__in=list(reactivos_sin_ids))
         #     else:
-        #         queryset |= models.Reactivo.objects.filter(pk__in=list(reactivos_sin_ids))
+        #         queryset |= models.ReactivoUpdate.objects.filter(pk__in=list(reactivos_sin_ids))
         #
         #     return queryset, use_distinct
 

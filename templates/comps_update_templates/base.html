@@ -25,6 +25,7 @@
 
     <script src="{% static "mdb/jquery-2.js" %}"></script>
     <script src="{% static "customs_js/modals.js" %}"></script>
+
     <script src="{% static "bootstrap3.3.7/js/jquery.form.min.js" %}"></script>
     <script src="{% static "bootstrap3.3.7/js/bootstrap.min.js" %}"></script>
     <script src="{% static "bootstrap3.3.7/js/npm.js" %}"></script>
@@ -105,37 +106,56 @@
 
     <!-- main columns -->
 
-    <main class="p-t-6" style="padding-top: 5%">
+    <main class="p-t-6" style="padding-top: 5%; margin-bottom: 170px;">
         <div class="container-fluid text-xs-center">
             {% block content %}{% endblock %}
         </div>
     </main>
 
     <footer class="footer">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-4 col-xs-offset-3">
-                <h5 class="">CONTACTOS</h5>
-                <table style="background-color: transparent">
-                    <tbody>
-                        <tr><th>Carlos:</th><td><a href="mailto:cdfigueredo@uclv.edu.cu">cdfigueredo@uclv.edu.cu</a></td></tr>
-                        <tr><th>Eduardo:</th><td><a href="mailto:emiguel@uclv.edu.cu">emiguel@uclv.edu.cu</a></td></tr>
-                        <tr><th>Belkis:</th><td><a href="mailto:belkismv@uclv.edu.cu">belkismv@uclv.edu.cu</a></td></tr>
-                        <tr><th>Reinaldo:</th><td><a href="mailto:reymolina@uclv.edu.cu">reymolina@uclv.edu.cu</a></td></tr>
-                        <tr><th>Evys:</th><td><a href="mailto:eancedeg@uclv.edu.cu">eancedeg@uclv.edu.cu</a></td></tr>
-                    </tbody>
-                </table>
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-4 col-xs-offset-3">
+                    <h5 class="">CONTACTOS</h5>
+                    <table style="background-color: transparent">
+                        <tbody>
+                        <tr>
+                            <th><span>Carlos: </span></th>
+                            <td class="text-center"><a href="mailto:cdfigueredo@uclv.edu.cu">cdfigueredo@uclv.edu.cu</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><span>Eduardo: </span></th>
+                            <td class="text-center"><a href="mailto:emiguel@uclv.edu.cu">emiguel@uclv.edu.cu</a></td>
+                        </tr>
+                        <tr>
+                            <th><span>Belkis: </span></th>
+                            <td class="text-center"><a href="mailto:belkismv@uclv.edu.cu">belkismv@uclv.edu.cu</a></td>
+                        </tr>
+                        <tr>
+                            <th><span>Reinaldo: </span></th>
+                            <td class="text-center"><a href="mailto:reymolina@uclv.edu.cu">reymolina@uclv.edu.cu</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><span>Evys: </span></th>
+                            <td class="text-center"><a href="mailto:eancedeg@uclv.edu.cu">eancedeg@uclv.edu.cu</a></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-xs-4">
+                    <h5>ENLACES DE INTERES</h5>
+
+                    <a class="text-center" href="http://www.cdc.gov/niosh/ipcs/default.html">CDC (para obtener los datos de compuestos)</a>
+                </div>
             </div>
-            <div class="col-xs-4">
-                <h5>ENLACES DE INTERES</h5>
+            <hr>
+            <div class="row text-center cite" style="margin-bottom: 15px;">
+                <cite>Todo buen cubano debe saber quimica y computacion. Jose Marti</cite>
             </div>
         </div>
-        <hr>
-        <div class="row text-center cite" style="margin-bottom: 15px;">
-            <cite>Todo buen cubano debe saber quimica y computacion. Jose Marti</cite>
-        </div>
-    </div>
-</footer>
+    </footer>
 
 {% endblock %}
 
@@ -144,8 +164,13 @@
 {% comment %}<script src="{% static "mdb/mdb.js" %}"></script>
 <script src="{% static "mdb/tether.js" %}"></script>{% endcomment %}
 
-{% comment %}<script type="text/javascript">
-    new WOW().init();
-</script>{% endcomment %}
+<script src="{% static "customs_js/sinonimos_inline.js" %}"></script>
+<script src="{% static "customs_js/existencia_inlines.js" %}"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('[data-toggle="popover"]').popover();
+    });
+</script>
 </body>
 </html>

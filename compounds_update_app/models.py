@@ -78,22 +78,28 @@ class UserInfo(models.Model):
         verbose_name_plural = "Informacion de los usuarios"
 
 
-class Reactivo(models.Model):
-    nombre_frasco = models.CharField(max_length=200, verbose_name="Nombre del frasco", null=True,
+class ReactivoUpdate(models.Model):
+    nombre_frasco = models.CharField(max_length=200, verbose_name="Nombre de la etiqueta del frasco", null=True,
                                      blank=True)
-    nombre = models.CharField(max_length=200, blank=True, null=True)
+    nombre = models.CharField(max_length=200, blank=True, null=True, verbose_name="Nombre real")
     r_reglas = models.CharField(max_length=150, blank=True, null=True)
     s_reglas = models.CharField(max_length=150, blank=True, null=True)
-    n_cas = models.CharField(max_length=150, blank=True, null=True, help_text="Ej: 234-4-56")
-    n_nu = models.CharField(max_length=150, blank=True, null=True)
-    n_icsc = models.CharField(max_length=150, blank=True, null=True)
-    n_rtecs = models.CharField(max_length=150, blank=True, null=True)
-    n_ce = models.CharField(max_length=150, blank=True, null=True)
-    n_einecs = models.CharField(max_length=150, blank=True, null=True)
+    h_reglas = models.CharField(max_length=150, blank=True, null=True)
+    p_reglas = models.CharField(max_length=150, blank=True, null=True)
+    n_cas = models.CharField(max_length=150, blank=True, null=True, verbose_name="CAS",
+                             help_text="Ejemplos: 19010-66-3, 62-38-4, etc")
+    n_nu = models.CharField(max_length=150, blank=True, null=True, verbose_name="NU")
+    n_icsc = models.CharField(max_length=150, blank=True, null=True, verbose_name="ICSC")
+    n_rtecs = models.CharField(max_length=150, blank=True, null=True, verbose_name="RTECS",
+                               help_text="Ejemplos: AE1225000, I3325000, etc")
+    n_ce = models.CharField(max_length=150, blank=True, null=True, verbose_name="CE",
+                            help_text="Ejemplos: 210-817-6, 006-045-00-2, 649-405-00-X etc")
+    n_einecs = models.CharField(max_length=150, blank=True, null=True, verbose_name="EINECS",
+                                help_text="Ejemplos: 252-104-2, 200-887-6, etc")
     peso_molecular = models.DecimalField(max_digits=5, decimal_places=2, verbose_name="Peso molecular", blank=True,
                                          null=True)
-    observaciones = models.TextField(blank=True, null=True)
-    local = models.CharField(max_length=200, blank=True, null=True)
+
+    local = models.CharField(max_length=200, blank=True, null=True, choices=get_local_choices(), default="UMEB")
 
     class Meta:
         unique_together = ('nombre_frasco', 'local')
@@ -112,15 +118,29 @@ class Reactivo(models.Model):
         return "reac. " + reactivo_id + self.local
 
 
-class PropiedadUp(models.Model):
-    reactivo = models.ForeignKey(Reactivo, on_delete=models.CASCADE)
+class SinonimosUpdate(models.Model):
+    reactivo = models.ForeignKey(ReactivoUpdate, related_name="sinonimos")
+    sinonimo = models.CharField(max_length=150)
+
+    class Meta:
+        unique_together = ('reactivo', 'sinonimo')
+
+    def unique_error_message(self, model_class, unique_check):
+        if model_class == type(self) and unique_check == ('reactivo', 'sinonimo'):
+            return 'Unique together in sinonimos violate'
+        else:
+            return super(SinonimosUpdate, self).unique_error_message(model_class, unique_check)
+
+
+class PropiedadUpdate(models.Model):
+    reactivo = models.ForeignKey(ReactivoUpdate, on_delete=models.CASCADE)
     propiedad = models.CharField(max_length=200, choices=get_propiedade_choices())
 
     def __unicode__(self):
         return self.propiedad
 
 
-class Existencia(models.Model):
+class ExistenciaUpdate(models.Model):
     unidad_medidas_choices = (('mg', 'mg'),
                               ('cg', 'cg'),
                               ('dg', 'dg'),
@@ -137,9 +157,16 @@ class Existencia(models.Model):
                               ('hl', 'hl'),
                               ('kl', 'kl'))
 
-    reactivo = models.ForeignKey(Reactivo, on_delete=models.CASCADE)
-    cantidad = models.PositiveIntegerField(blank=True, null=True)
-    capacidad = models.PositiveIntegerField(blank=True, null=True)
+    tipo_envases_choices = (('Pomo', 'Pomo'),
+                            ('Caja', 'Caja'),
+                            ('Tanque', 'Tanque'),
+                            ('Lata', 'Lata'),
+                            ('Saco', 'Saco')
+                            )
+
+    reactivo = models.ForeignKey(ReactivoUpdate, on_delete=models.CASCADE)
+    cantidad = models.PositiveIntegerField()
+    capacidad = models.PositiveIntegerField()
     unidad_medida = models.CharField(max_length=2, choices=unidad_medidas_choices, verbose_name="Unidad de medida",
                                      default='g')
     almacenamiento_idoneo = models.NullBooleanField(verbose_name="¿Es idoneo el almacenamiento?", default=True)
@@ -153,13 +180,13 @@ class Existencia(models.Model):
     # estados_reactivos = models.ManyToManyField(EstadoReactivo, through='RelExistenciaEstadoReactivo',
     #                                            through_fields=('existencia', 'estado'))
 
-    tipo_envase = models.CharField(max_length=100, blank=True, null=True, choices=get_generic_choices(TipoEnvase))
-    material_envase = models.CharField(max_length=100, blank=True, null=True,
+    tipo_envase = models.CharField(max_length=100, blank=True, null=True, choices=tipo_envases_choices)
+    material_envase = models.CharField(max_length=100,
                                        choices=get_generic_choices(MaterialEnvase))
     firma = models.CharField(max_length=100, blank=True, null=True)
 
     class Meta:
-        unique_together = ('capacidad', 'unidad_medida', 'tipo_envase', 'material_envase', 'firma')
+        unique_together = ('reactivo', 'capacidad', 'unidad_medida', 'tipo_envase', 'material_envase', 'firma')
 
     def __unicode__(self):
         reactivo_id = unicode(self.reactivo.id)
@@ -174,7 +201,7 @@ class Existencia(models.Model):
 
 
 class EstadoEnvaseUp(models.Model):
-    existencia = models.ForeignKey(Existencia)
+    existencia = models.ForeignKey(ExistenciaUpdate)
     cantidad = models.PositiveIntegerField(blank=True, null=True)
     estado = models.CharField(max_length=50, choices=get_generic_choices(EstadoEnvase))
 
@@ -183,7 +210,7 @@ class EstadoEnvaseUp(models.Model):
 
 
 class EstadoProductoUp(models.Model):
-    existencia = models.ForeignKey(Existencia)
+    existencia = models.ForeignKey(ExistenciaUpdate)
     cantidad = models.PositiveIntegerField(blank=True, null=True)
     estado = models.CharField(max_length=50, choices=get_generic_choices(EstadoProducto))
 
@@ -192,7 +219,7 @@ class EstadoProductoUp(models.Model):
 
 
 class EstadoUsoReactivo(models.Model):
-    existencia = models.ForeignKey(Existencia)
+    existencia = models.ForeignKey(ExistenciaUpdate)
     cantidad = models.PositiveIntegerField(blank=True, null=True)
     estado = models.CharField(max_length=50, choices=get_estados_usos())
 

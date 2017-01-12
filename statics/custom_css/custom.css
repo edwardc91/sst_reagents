@@ -7,18 +7,6 @@
 
 /* TEMPLATE STYLES */
 /* Necessary for full page carousel*/
-
-html,
-body {
-    height: 100%;
-}
-
-@media (max-width: 480px) {
-    .footer-resize {
-        font-size: smaller;
-    }
-}
-
 .modal::before {
   content: "";
   display: inline-block;
@@ -52,17 +40,39 @@ body {
     margin-top: 30px;
 }
 
-.img-login{
-    margin-left: 62px;
+html {
+  height: 100%;
+  box-sizing: border-box;
 }
 
-footer{
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+/*Normalize html and body elements,this style is just good to have*/
+
+body{
+  position: relative;
+  margin: 0;
+  padding-bottom: 6rem;
+  min-height: 100%;
+}
+
+.footer{
     width:100%;
     min-height:100px;
     border: 1px solid rgba(0,0,0,0.6);
     box-shadow: #0c0d0e 7px 7px 10px 7px;
     background-image: linear-gradient(#484e55, #3a3f44 30%, #313539);
+    margin-top: 15px;
+
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
 }
+
 
 
 

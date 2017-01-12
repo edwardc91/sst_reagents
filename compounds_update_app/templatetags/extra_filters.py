@@ -43,32 +43,8 @@ def contains(value, arg):
 
 
 @register.filter
-def get_id__url(value):
-    mo = re.match("/(en|es)/(.+/|.+/\d+/)", value)
-
-    if mo:
-        result = mo.group(2)
-    else:
-        result = ""
-
-    return result
-
-@register.filter
 def get_i_item(value, arg):
     return value[int(arg)]
-
-
-@register.filter
-def get_image_url(value):
-    mo = re.match(".+(http://.+\.jpg).+", value)
-
-    print mo.group(1)
-    if mo:
-        result = mo.group(1)
-    else:
-        result = ""
-
-    return result
 
 
 @register.filter
@@ -77,8 +53,50 @@ def get_local_id(value):
 
 
 @register.filter
-def is_equal_with(value,arg):
+def is_equal_with(value, arg):
     if str(value) == str(arg):
         return True
     return False
 
+
+@register.filter
+def is_li_than(value, arg):
+    if int(value) >= int(arg):
+        return True
+    return False
+
+
+@register.filter
+def is_si_than(value, arg):
+    if int(value) <= int(arg):
+        return True
+    return False
+
+
+@register.filter
+def is_lg_than(value, arg):
+    if int(value) > int(arg):
+        return True
+    return False
+
+
+@register.filter
+def is_sm_than(value, arg):
+    if int(value) < int(arg):
+        return True
+    return False
+
+
+@register.filter
+def get_management_form(value):
+    return value.management_form
+
+
+@register.filter
+def get_formset_id(value):
+    return value.id
+
+
+@register.filter
+def get_empty_form_as(value):
+    return value.empty_form.as_table

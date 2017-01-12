@@ -7,7 +7,7 @@
     <form class="form-signin center-block form-login" style="width: 20%" method="post">
         {% csrf_token %}
         <h2 class="text-center">Reactivos CBQ</h2>
-        <img class="img-login" width="110" height="170" src="{% static "images/icons/reactivo_bottle.png" %}">
+        <img class="center-block" width="110" height="170" src="{% static "images/icons/reactivo_bottle.png" %}">
         <h4 class="form-signin-heading text-center">Inicie sesion</h4>
         <table>
             {{ form.as_table }}
@@ -16,9 +16,9 @@
                 class="glyphicon glyphicon-log-in"></i> Entrar
         </button>
         <br>
-    <a href="" style="margin-top: 20px"><p class="text-center">Olvide mi contraseña <span
+        <a href="" style="margin-top: 20px"><p class="text-center">Olvide mi contraseña <span
                 class="glyphicon glyphicon-envelope"></span>
-    </p></a>
+        </p></a>
 
     </form>
 {% endblock %}

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" hash="1279436750">
+    <data-source source="LOCAL" name="PostgreSQL - postgres@localhost" uuid="92affb5b-b76d-4833-95da-049f2f745340">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5432/postgres</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="Sqlite (Xerial) - identifier.sqlite" uuid="30225a7e-3cb0-44f5-8c42-a6f5dd2fc3ac">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:identifier.sqlite</jdbc-url>
+    </data-source>
+  </component>
+</project>

@@ -143,7 +143,7 @@ class Reactivo(models.Model):
         return "reac. " + reactivo_id
 
     def nombre_reactivo(self):
-        reactivo_id = "Reactivo numero " + unicode(self.id)
+        reactivo_id = "ReactivoUpdate numero " + unicode(self.id)
 
         if self.nombre:
             reactivo_id = self.nombre

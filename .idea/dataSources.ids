@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component name="dataSourceStorage">
+  <data-source name="PostgreSQL - postgres@localhost" uuid="92affb5b-b76d-4833-95da-049f2f745340">
+    <database-info product="" version="" jdbc-version="" driver-name="" driver-version=""/>
+  </data-source>
+  <data-source name="Sqlite (Xerial) - identifier.sqlite" uuid="30225a7e-3cb0-44f5-8c42-a6f5dd2fc3ac">
+    <database-info product="SQLite" version="3.8.11" jdbc-version="2.1" driver-name="SQLiteJDBC" driver-version="native"/>
+    <case-sensitivity plain-identifiers="mixed" quoted-identifiers="mixed"/>
+    <schema name="" catalog=""/>
+  </data-source>
+</component>

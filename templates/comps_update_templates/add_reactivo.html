@@ -1,8 +1,12 @@
 {% extends "comps_update_templates/base.html" %}
 
+{% load extra_filters %}
+
 {% block title %}Agregar reactivo{% endblock %}
 
 {% block content %}
+    {% load static %}
+
     {% if messages %}
         {% for message in messages %}
             {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
@@ -10,7 +14,7 @@
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
                             aria-hidden="true"><i class="glyphicon glyphicon-remove"></i></span></button>
                     <span style="color: white"><i class="glyphicon glyphicon-alert"></i>
-                         {% if message.extra_tags %}<strong>{{ message.extra_tags }}</strong>{% endif %}
+                        {% if message.extra_tags %}<strong>{{ message.extra_tags }}</strong>{% endif %}
                         {{ message }}</span>
                 </div>
             {% endif %}
@@ -18,108 +22,136 @@
     {% endif %}
     <div class="col-md-12">
         <h2 class="h2 text-center">Agregue un nuevo reactivo</h2>
-        <form method="post">
+        <form method="post" class="text-center">
             {% csrf_token %}
-            <div class="row">
-                <div class="col-md-4 col-md-offset-2">
-                    <div>
-                        <label for="{{ form_reactivo.nombre_frasco.id_for_label }}">Nombre del frasco:</label>
-                        {{ form_reactivo.nombre_frasco }}
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div>
-                        <label for="{{ form_reactivo.nombre.id_for_label }}">Nombre del reactivo:</label>
-                        {{ form_reactivo.nombre }}
-                    </div>
-                </div>
-            </div>
-            <hr>
-            <div class="row">
-                <div class="col-md-4 col-md-offset-2">
-                    <div>
-                        <label for="{{ form_reactivo.r_reglas.id_for_label }}">R reglas:</label>
-                        {{ form_reactivo.r_reglas }}
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div>
-                        <label for="{{ form_reactivo.s_reglas.id_for_label }}">S reglas:</label>
-                        {{ form_reactivo.s_reglas }}
-                    </div>
-                </div>
-            </div>
-            <hr>
-            <div class="row">
-                <div class="col-md-4 col-md-offset-2">
-                    <div>
-                        <label class="label" for="{{ form_reactivo.n_cas.id_for_label }}">CAS:</label>
-                        {{ form_reactivo.n_cas }}
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div>
-                        <label for="{{ form_reactivo.n_nu.id_for_label }}">NU:</label>
-                        {{ form_reactivo.n_nu }}
-                    </div>
-                </div>
-            </div>
-            <hr>
-            <div class="row">
-                <div class="col-md-4 col-md-offset-2">
-                    <div>
-                        <label for="{{ form_reactivo.n_icsc.id_for_label }}">ICSC:</label>
-                        {{ form_reactivo.n_icsc }}
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div>
-                        <label for="{{ form_reactivo.n_rtecs.id_for_label }}">RTECS:</label>
-                        {{ form_reactivo.n_rtecs }}
-                    </div>
-                </div>
-            </div>
-            <hr>
-            <div class="row">
-                <div class="col-md-4 col-md-offset-2">
-                    <div>
-                        <label for="{{ form_reactivo.n_ce.id_for_label }}">CE:</label>
-                        {{ form_reactivo.n_ce }}
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div>
-                        <label for="{{ form_reactivo.n_einecs.id_for_label }}">EINECS:</label>
-                        {{ form_reactivo.n_einecs }}
-                    </div>
-                </div>
-            </div>
-            <hr>
-            <div class="row">
-                <div class="col-md-4 col-md-offset-2">
-                    <div>
-                        <label for="{{ form_reactivo.peso_molecular.id_for_label }}">Peso molecular:</label>
-                        {{ form_reactivo.peso_molecular }}
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div>
-                        <label for="{{ form_reactivo.observaciones.id_for_label }}">Observaciones:</label>
-                        {{ form_reactivo.observaciones }}
-                    </div>
-                </div>
-            </div>
-            <hr>
-            <div class="row">
-                <div class="col-md-6 col-md-offset-3">
-                    <label>{{ form_reactivo.propiedades.label_tag }}</label>
-                    {{ form_reactivo.propiedades }}
-                </div>
+            {% for field in form_reactivo %}
+                {% if not forloop.last %}
+                    {% if forloop.counter|divisibleby:"2" %}
+                            {% if forloop.counter|is_li_than:"4" %}
+                                <div class="row">
+                                    <div class="col-md-4 col-xs-offset-2">
+                                        <div class="fieldWrapper">
+                                            {{ field.errors }}
+                                            <h4 id="id_nombre_frasco"><span
+                                                    class="label">{{ field.label_tag }}</span>
+                                            </h4>
+                                            {{ field }}
+                                            {% if field.help_text %}
+                                                <p class="help">{{ field.help_text|safe }}</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    {% else %}
+                                    <div class="col-md-4">
+                                        <div class="fieldWrapper">
+                                            {{ field.errors }}
+                                            <h4 id="id_nombre_frasco"><span
+                                                    class="label">{{ field.label_tag }}</span>
+                                            </h4>
+                                            {{ field }}
+                                            {% if field.help_text %}
+                                                <p class="help">{{ field.help_text|safe }}</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                    {% else %}
+                        {% ifequal forloop.counter 3 %}
+                            <hr>
+                            <div class="row">
+                                <div class="col-xs-8 col-xs-offset-2">
+                                    <div id="formset_add">
+                                        {{ inline_formset.management_form }}
+                                        <div id="forms_sin_add">
+                                            {% for form in inline_formset %}
+                                                <div class="row" id="label_sin_{{ forloop.counter0 }}">
+                                                    <h4 id="id_nombre_frasco"><span
+                                                            class="label">Sinonimo #{{ forloop.counter }}:</span>
+                                                    </h4>
+                                                </div>
+                                                <div class="row" id="input_sin_{{ forloop.counter0 }}">
+                                                    <div class="col-xs-11">{{ form.sinonimo }}</div>
+                                                    <div class="col-xs-1"><a id="" data-id="{{ forloop.counter0 }}"
+                                                                             class="btn btn-danger del_sin_btn">Eliminar</a>
+                                                    </div>
+                                                </div>
+                                                {% comment %}<div class="row">
+                                            <i class="glyphicon glyphicon-trash"></i> Eliminar: {{ form.DELETE }}
+                                        </div>{% endcomment %}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <br>
+                                    <button type="button"
+                                            id="add_more_add"
+                                            class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i>
+                                        Agregar sinonimo
+                                    </button>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-xs-4 col-xs-offset-4">
+                                    <div class="fieldWrapper">
+                                        {{ field.errors }}
+                                        <h4 id="id_nombre_frasco"><span
+                                                class="label">{{ field.label_tag }}</span>
+                                        </h4>
+                                        {{ field }}
+                                        {% if field.help_text %}
+                                            <p class="help">{{ field.help_text|safe }}</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                        {% else %}
+                            {% if forloop.counter|is_lg_than:"3" %}
+                                <div class="col-md-4">
+                                    <div class="fieldWrapper">
+                                        {{ field.errors }}
+                                        <h4 id="id_nombre_frasco"><span
+                                                class="label">{{ field.label_tag }}</span>
+                                        </h4>
+                                        {{ field }}
+                                        {% if field.help_text %}
+                                            <p class="help">{{ field.help_text|safe }}</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                </div>
+                            {% else %}
+                                <div class="row">
+                                <div class="col-md-4 col-md-offset-2">
+                                    <div class="fieldWrapper">
+                                        {{ field.errors }}
+                                        <h4 id="id_nombre_frasco"><span
+                                                class="label">{{ field.label_tag }}</span>
+                                        </h4>
+                                        {{ field }}
+                                        {% if field.help_text %}
+                                            <p class="help">{{ field.help_text|safe }}</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endifequal %}
+                    {% endif %}
+                {% else %}
 
+                    <div class="row text-left">
+                        <div class="col-md-6 col-md-offset-3">
+                            <h2 class="h2 text-center">
+                                Propiedades</h2>
+                            {{ field }}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+            <button class="btn btn-default"><i class="glyphicon glyphicon-plus-sign"></i> Agregar</button>
+
+            </form>
             </div>
-
-            <button class="btn btn-primary">Agregar</button>
-
-        </form>
-    </div>
 {% endblock %}

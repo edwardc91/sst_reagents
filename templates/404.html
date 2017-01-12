@@ -1,0 +1,8 @@
+{% extends "comps_update_templates/base.html" %}
+
+{% block title %}No encontrada{% endblock %}
+
+{% block body %}
+        <h1>Error 404:</h1>
+        <h2>La pagina  <span style="color: rgba(87, 255, 82, 0.81)">{{ request.get_full_path }}</span> a la que desea acceder no existe</h2>
+{% endblock %}
